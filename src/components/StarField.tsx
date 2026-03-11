@@ -1,13 +1,29 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Points, PointMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 
+// Lightweight mobile detection to tune particle counts & performance
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const check = () => setIsMobile(window.innerWidth <= breakpoint);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, [breakpoint]);
+
+  return isMobile;
+}
+
 function Stars() {
   const ref = useRef<THREE.Points>(null);
   const mousePos = useRef({ x: 0, y: 0 });
+  const isMobile = useIsMobile();
 
-  const particlesCount = 5000;
+  const particlesCount = isMobile ? 2000 : 5000;
   const positions = useMemo(() => {
     const positions = new Float32Array(particlesCount * 3);
     for (let i = 0; i < particlesCount; i++) {
@@ -29,14 +45,17 @@ function Stars() {
     }
   });
 
-  if (typeof window !== 'undefined') {
-    window.addEventListener('mousemove', (e) => {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handleMouseMove = (e: MouseEvent) => {
       mousePos.current = {
         x: e.clientX - window.innerWidth / 2,
         y: e.clientY - window.innerHeight / 2,
       };
-    });
-  }
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   return (
     <Points ref={ref} positions={positions} stride={3} frustumCulled={false}>
@@ -55,7 +74,8 @@ function Stars() {
 // Additional twinkling stars
 function TwinklingStars() {
   const ref = useRef<THREE.Points>(null);
-  const particlesCount = 1000;
+  const isMobile = useIsMobile();
+  const particlesCount = isMobile ? 400 : 1000;
   
   const positions = useMemo(() => {
     const positions = new Float32Array(particlesCount * 3);
@@ -93,7 +113,8 @@ function TwinklingStars() {
 // Slow moving background stars
 function BackgroundStars() {
   const ref = useRef<THREE.Points>(null);
-  const particlesCount = 2000;
+  const isMobile = useIsMobile();
+  const particlesCount = isMobile ? 800 : 2000;
   
   const positions = useMemo(() => {
     const positions = new Float32Array(particlesCount * 3);
@@ -128,9 +149,15 @@ function BackgroundStars() {
 }
 
 export default function StarField() {
+  const isMobile = useIsMobile();
+
   return (
     <div className="fixed inset-0 -z-10">
-      <Canvas camera={{ position: [0, 0, 1] }}>
+      <Canvas
+        camera={{ position: [0, 0, 1] }}
+        dpr={isMobile ? [1, 1.25] : [1, 2]}
+        gl={{ antialias: !isMobile, powerPreference: 'high-performance' }}
+      >
         <Stars />
         <TwinklingStars />
         <BackgroundStars />

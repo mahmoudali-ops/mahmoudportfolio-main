@@ -43,7 +43,7 @@ export default function Navigation() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled || mobileOpen ? 'bg-card/80 backdrop-blur-xl border-b border-border' : 'bg-transparent'
+        scrolled || mobileOpen ? 'bg-card border-b border-border' : 'bg-transparent'
       }`}
     >
       <div className="container mx-auto px-6 py-4">
@@ -116,47 +116,55 @@ export default function Navigation() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="md:hidden fixed inset-0 top-[65px] z-40 bg-card/95 backdrop-blur-xl"
+            className="md:hidden fixed inset-0 top-0 z-40 pointer-events-none"
           >
-            <div className="flex flex-col justify-between h-full px-8 py-10">
-              <div className="flex flex-col gap-2">
-                {navItems.map((item, i) => (
-                  <motion.button
-                    key={item}
-                    initial={{ opacity: 0, x: -30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -30 }}
-                    transition={{ delay: i * 0.07 }}
-                    onClick={() => scrollToSection(item)}
-                    className="text-left text-xl font-medium text-foreground/80 hover:text-primary transition-colors py-4 border-b border-border/20 flex items-center gap-3 group"
-                  >
-                    <span className="w-2 h-2 rounded-full bg-primary/40 group-hover:bg-primary group-hover:shadow-[0_0_10px_hsl(var(--primary)/0.6)] transition-all" />
-                    {item}
-                  </motion.button>
-                ))}
-              </div>
+            <motion.div
+              initial={{ opacity: 0, y: -24, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -16, scale: 0.98 }}
+              transition={{ duration: 0.28, ease: 'easeOut' }}
+              className="pointer-events-auto mx-4 mt-24 mb-6 rounded-3xl border border-border/60 bg-[radial-gradient(circle_at_top,_hsl(265_89%_16%_/_0.96),_hsl(230_35%_7%))] shadow-[0_0_40px_hsl(265_89%_68%_/_0.45)] backdrop-blur-xl"
+            >
+              <div className="flex flex-col justify-between h-full max-h-[calc(100vh-7rem)] px-8 py-8">
+                <div className="flex flex-col gap-2">
+                  {navItems.map((item, i) => (
+                    <motion.button
+                      key={item}
+                      initial={{ opacity: 0, x: -30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -30 }}
+                      transition={{ delay: i * 0.07 }}
+                      onClick={() => scrollToSection(item)}
+                      className="text-left text-xl font-medium text-foreground/85 hover:text-primary transition-colors py-4 border-b border-border/20 flex items-center gap-3 group"
+                    >
+                      <span className="w-2 h-2 rounded-full bg-primary/40 group-hover:bg-primary group-hover:shadow-[0_0_10px_hsl(var(--primary)/0.6)] transition-all" />
+                      {item}
+                    </motion.button>
+                  ))}
+                </div>
 
-              {/* Social links */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="flex items-center justify-center gap-4 pb-8"
-              >
-                {socialLinks.map(({ icon: Icon, href, label, color }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3.5 rounded-xl border border-primary/30 bg-primary/10 text-primary hover:bg-primary/20 hover:shadow-[0_0_20px_hsl(var(--primary)/0.3)] transition-all"
-                    aria-label={label}
-                  >
-                    <Icon size={22} />
-                  </a>
-                ))}
-              </motion.div>
-            </div>
+                {/* Social links */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.35 }}
+                  className="flex items-center justify-center gap-4 pt-4"
+                >
+                  {socialLinks.map(({ icon: Icon, href, label, color }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-3.5 rounded-xl border border-primary/30 bg-primary/10 text-primary hover:bg-primary/20 hover:shadow-[0_0_24px_hsl(var(--primary)/0.35)] transition-all"
+                      aria-label={label}
+                    >
+                      <Icon size={22} />
+                    </a>
+                  ))}
+                </motion.div>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

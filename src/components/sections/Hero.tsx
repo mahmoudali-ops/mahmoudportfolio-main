@@ -28,89 +28,139 @@ function useGalaxyStars(count: number) {
   }, [count]);
 }
 
+// Lightweight mobile detection to simplify heavy animations on small screens
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= breakpoint);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, [breakpoint]);
+
+  return isMobile;
+}
+
 function GalaxyBackground() {
-  const stars = useGalaxyStars(600);
+  const isMobile = useIsMobile();
+  // عدد أقل شوية على الموبايل للحفاظ على الأداء، مع نفس طريقة الحركة تقريبًا
+  const stars = useGalaxyStars(isMobile ? 260 : 600);
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-[1]">
       {/* Galaxy core glow */}
       <motion.div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full blur-[80px]"
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] md:w-[350px] md:h-[350px] rounded-full blur-[70px] md:blur-[80px]"
         style={{ background: 'radial-gradient(circle, hsl(265 89% 68% / 0.5), hsl(280 100% 70% / 0.2), transparent)' }}
         animate={{
-          scale: [1, 1.15, 1],
-          opacity: [0.5, 0.7, 0.5],
+          scale: [1, 1.1, 1],
+          opacity: [0.45, 0.7, 0.45],
         }}
         transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
       />
 
       {/* Secondary nebula glow */}
       <motion.div
-        className="absolute left-[40%] top-[45%] w-[250px] h-[200px] rounded-full blur-[60px]"
+        className="absolute left-[40%] top-[45%] w-[220px] h-[180px] md:w-[250px] md:h-[200px] rounded-full blur-[55px] md:blur-[60px]"
         style={{ background: 'radial-gradient(ellipse, hsl(195 100% 50% / 0.3), transparent)' }}
         animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
+          scale: [1, 1.18, 1],
+          opacity: [0.25, 0.45, 0.25],
         }}
         transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
       />
 
-      {/* Rotating galaxy container */}
-      <motion.div
-        className="absolute inset-0"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 120, repeat: Infinity, ease: 'linear' }}
-      >
-        {stars.map((star) => (
-          <motion.div
-            key={star.id}
-            className="absolute rounded-full"
-            style={{
-              left: `${star.x}%`,
-              top: `${star.y}%`,
-              width: star.size,
-              height: star.size,
-              backgroundColor: star.color,
-              boxShadow: `0 0 ${star.size * 2}px ${star.color}`,
-            }}
-            animate={{
-              opacity: [star.opacity, star.opacity * 0.3, star.opacity],
-              scale: [1, 1.5, 1],
-            }}
-            transition={{
-              duration: star.twinkleDuration,
-              repeat: Infinity,
-              delay: star.twinkleDelay,
-              ease: 'easeInOut',
-            }}
-          />
-        ))}
-      </motion.div>
-
-      {/* Shooting stars */}
-      {[0, 1, 2].map((i) => (
+      {/* نجوم خفيفة على الموبايل (مع دوران أسرع)، وجالاكسي كاملة على الديسكتوب */}
+      {isMobile ? (
         <motion.div
-          key={`shoot-${i}`}
-          className="absolute w-[2px] h-[2px] rounded-full"
-          style={{
-            background: 'hsl(0 0% 100%)',
-            boxShadow: '0 0 6px 2px hsl(195 100% 80% / 0.8), -20px 0 15px 1px hsl(195 100% 70% / 0.4)',
-          }}
-          initial={{ x: '20%', y: '10%', opacity: 0 }}
-          animate={{
-            x: ['20%', '80%'],
-            y: ['10%', '60%'],
-            opacity: [0, 1, 0],
-          }}
-          transition={{
-            duration: 1.5,
-            repeat: Infinity,
-            delay: i * 7 + 3,
-            repeatDelay: 15 + i * 5,
-            ease: 'easeIn',
-          }}
-        />
-      ))}
+          className="absolute inset-0"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 70, repeat: Infinity, ease: 'linear' }}
+        >
+          {stars.map((star) => (
+            <motion.div
+              key={star.id}
+              className="absolute rounded-full"
+              style={{
+                left: `${star.x}%`,
+                top: `${star.y}%`,
+                width: star.size,
+                height: star.size,
+                backgroundColor: star.color,
+                boxShadow: `0 0 ${star.size * 2}px ${star.color}`,
+              }}
+              animate={{
+                opacity: [star.opacity * 0.6, star.opacity, star.opacity * 0.6],
+              }}
+              transition={{
+                duration: star.twinkleDuration + 1,
+                repeat: Infinity,
+                delay: star.twinkleDelay,
+                ease: 'easeInOut',
+              }}
+            />
+          ))}
+        </motion.div>
+      ) : (
+        <>
+          <motion.div
+            className="absolute inset-0"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 120, repeat: Infinity, ease: 'linear' }}
+          >
+            {stars.map((star) => (
+              <motion.div
+                key={star.id}
+                className="absolute rounded-full"
+                style={{
+                  left: `${star.x}%`,
+                  top: `${star.y}%`,
+                  width: star.size,
+                  height: star.size,
+                  backgroundColor: star.color,
+                  boxShadow: `0 0 ${star.size * 2}px ${star.color}`,
+                }}
+                animate={{
+                  opacity: [star.opacity, star.opacity * 0.3, star.opacity],
+                  scale: [1, 1.5, 1],
+                }}
+                transition={{
+                  duration: star.twinkleDuration,
+                  repeat: Infinity,
+                  delay: star.twinkleDelay,
+                  ease: 'easeInOut',
+                }}
+              />
+            ))}
+          </motion.div>
+
+          {/* Shooting stars */}
+          {[0, 1, 2].map((i) => (
+            <motion.div
+              key={`shoot-${i}`}
+              className="absolute w-[2px] h-[2px] rounded-full"
+              style={{
+                background: 'hsl(0 0% 100%)',
+                boxShadow: '0 0 6px 2px hsl(195 100% 80% / 0.8), -20px 0 15px 1px hsl(195 100% 70% / 0.4)',
+              }}
+              initial={{ x: '20%', y: '10%', opacity: 0 }}
+              animate={{
+                x: ['20%', '80%'],
+                y: ['10%', '60%'],
+                opacity: [0, 1, 0],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                delay: i * 7 + 3,
+                repeatDelay: 15 + i * 5,
+                ease: 'easeIn',
+              }}
+            />
+          ))}
+        </>
+      )}
 
     </div>
   );
