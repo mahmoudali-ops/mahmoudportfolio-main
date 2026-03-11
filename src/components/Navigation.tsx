@@ -116,8 +116,7 @@ export default function Navigation() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="md:hidden fixed inset-0 top-[65px] z-40"
-            style={{ background: 'linear-gradient(160deg, hsl(230 35% 9%), hsl(265 40% 12%), hsl(230 35% 7%))' }}
+            className="md:hidden fixed inset-0 top-[65px] z-40 bg-card/95 backdrop-blur-xl"
           >
             <div className="flex flex-col justify-between h-full px-8 py-10">
               <div className="flex flex-col gap-2">
