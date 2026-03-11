@@ -169,11 +169,10 @@ function GalaxyBackground() {
 function TypewriterTitle() {
   const titles = [
     'Full-Stack .NET Developer',
-    'Software Architect',
     'Clean Code Enthusiast',
     'Problem Solver',
+    'Always Learning New Tech'
   ];
-
   const [currentTitleIndex, setCurrentTitleIndex] = useState(0);
   const [displayText, setDisplayText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
