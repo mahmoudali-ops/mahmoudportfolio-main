@@ -58,39 +58,52 @@ export default function About() {
 
           {/* Timeline */}
           <div className="relative max-w-4xl mx-auto">
-            {/* Vertical line */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-primary via-accent to-secondary" />
+            {/* Vertical line - left on mobile, center on desktop */}
+            <div className="absolute left-4 md:left-1/2 md:transform md:-translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-primary via-accent to-secondary" />
 
             {timelineItems.map((item, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 80, scale: 0.95 }}
+                initial={{ opacity: 0, y: 60, scale: 0.96 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ 
-                  delay: index * 0.15, 
-                  duration: 0.6,
+                viewport={{ once: true, margin: '-80px', amount: 0.3 }}
+                transition={{
+                  delay: index * 0.12,
+                  duration: 0.5,
                   type: 'spring',
                   stiffness: 100,
-                  damping: 15
+                  damping: 18,
                 }}
-                whileHover={{ scale: 1.02, y: -5 }}
-                className={`relative mb-16 ${
-                  index % 2 === 0 ? 'pr-1/2 text-right' : 'pl-1/2 text-left'
-                }`}
+                whileHover={{ scale: 1.02, y: -4 }}
+                className="relative mb-12 md:mb-16"
               >
+                {/* Mobile: single column, content right of line | Desktop: alternating */}
                 <div
-                  className={`inline-block p-8 rounded-2xl bg-card/50 backdrop-blur-xl border-2 border-border hover:border-primary/50 hover:shadow-[0_20px_60px_rgba(120,50,255,0.15)] transition-all duration-300 ${
-                    index % 2 === 0 ? 'mr-12' : 'ml-12'
+                  className={`relative pl-12 md:pl-0 ${
+                    index % 2 === 0
+                      ? 'md:pr-[52%] md:text-right'
+                      : 'md:pl-[52%] md:text-left'
                   }`}
                 >
-                  <div className="text-primary font-bold text-lg mb-2">{item.year}</div>
-                  <h3 className="text-2xl font-semibold mb-3">{item.title}</h3>
-                  <p className="text-muted-foreground">{item.description}</p>
-                </div>
+                  <div
+                    className={`p-6 sm:p-8 rounded-2xl bg-card/50 backdrop-blur-xl border-2 border-border hover:border-primary/50 hover:shadow-[0_20px_60px_rgba(120,50,255,0.15)] transition-all duration-300 w-full ${
+                      index % 2 === 0 ? 'md:mr-14' : 'md:ml-14'
+                    }`}
+                  >
+                    <div className="text-primary font-bold text-base sm:text-lg mb-2">
+                      {item.year}
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-semibold mb-3">
+                      {item.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
 
-                {/* Timeline dot */}
-                <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-5 h-5 bg-primary rounded-full border-4 border-background shadow-lg shadow-primary/50" />
+                  {/* Timeline dot */}
+                  <div className="absolute top-6 sm:top-8 left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 sm:w-5 sm:h-5 bg-primary rounded-full border-4 border-background shadow-lg shadow-primary/50 z-10" />
+                </div>
               </motion.div>
             ))}
           </div>

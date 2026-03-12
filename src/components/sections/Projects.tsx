@@ -179,7 +179,7 @@ export default function Projects() {
 
   return (
     <section id="projects" className="relative py-32 overflow-hidden">
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto px-4 sm:px-6">
         <motion.h2
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
@@ -193,13 +193,13 @@ export default function Projects() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.2 }}
-          className="flex justify-center gap-3 mb-16"
+          className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-16"
         >
           {categories.map((cat) => (
             <button
               key={cat.key}
               onClick={() => setActive(cat.key)}
-              className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 border ${
+              className={`px-4 sm:px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 border shrink-0 ${
                 active === cat.key
                   ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/25'
                   : 'bg-card/50 text-muted-foreground border-border hover:border-primary/50 hover:text-foreground'
