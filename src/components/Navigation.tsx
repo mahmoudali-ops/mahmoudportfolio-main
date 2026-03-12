@@ -22,6 +22,14 @@ export default function Navigation() {
     return () => { document.body.style.overflow = ''; };
   }, [mobileOpen]);
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+    setMobileOpen(false);
+  };
+
   const scrollToSection = (id: string) => {
     const sectionId = id.toLowerCase().replace(' ', '-');
     const element = document.getElementById(sectionId);
@@ -48,12 +56,20 @@ export default function Navigation() {
     >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="text-2xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent"
+          <button
+            type="button"
+            onClick={scrollToTop}
+            className="focus:outline-none"
+            aria-label="Scroll to top"
           >
-            Mahmoud Ali
-          </motion.div>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.97 }}
+              className="text-2xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent cursor-pointer"
+            >
+              Mahmoud Ali
+            </motion.div>
+          </button>
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-8">
